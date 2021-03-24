@@ -1,0 +1,35 @@
+\documentclass[12pt]{article}
+\RequirePackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{setspace}
+\usepackage[paperwidth=15cm]{geometry}
+\usepackage[active, tightpage]{preview}
+\setlength\PreviewBorder{2pt}
+\usepackage{tabstackengine}
+\stackMath
+\setstackgap{L}{24pt}
+\setstacktabbedgap{4pt}
+\def\lrgap{\kern6pt}
+\def\xbracketVectorstack#1{\left[\lrgap\Vectorstack{#1}\lrgap\right]}
+\def\xbracketMatrixstack#1{\left[\lrgap\tabbedCenterstack{#1}\lrgap\right]}
+\begin{document}
+\begin{preview}
+{
+$$
+\begin{bmatrix*}[l]
+\vspace{1.5mm}
+\text{\textsc{pred}} & \phantom{.} \text{`rain$\langle$$\rangle$$\widehat{\text{\textsc{gf}}}$'}\\
+\vspace{1.5mm}
+\text{\textsc{tense}} & \phantom{.} \text{\textsc{past}}\\
+\vspace{1.5mm}
+\text{$\widehat{\text{\textsc{gf}}}$} &
+\begin{bmatrix*}[l]
+\text{\textsc{form}} & \phantom{.} \text{it}\\
+\end{bmatrix*}\\
+\end{bmatrix*}\\
+$$}
+\end{preview}
+\end{document}
+"#OpenAVM" 
