@@ -118,10 +118,8 @@ var scArray = [
 var allTerms = specialArray.concat(scArray)
 var outputArray1 = [
     "\\documentclass[12pt]{article}",
-    "\\RequirePackage{fontspec}",
     "\\usepackage[T1]{fontenc}",
     "\\usepackage[utf8]{inputenc}",
-    "\\usepackage{mathptmx}"
 ];
 var outputArray2 = [
     "\\usepackage{amsmath}",
@@ -140,9 +138,10 @@ var outputArray3 = [
     "\\def\\xbracketMatrixstack#1{\\left[\\lrgap\\tabbedCenterstack{#1}\\lrgap\\right]}",
     "\\begin{document}",
     "\\begin{preview}",
-    "{",
-    "$$"
+    "{$$"
 ];
+var helvet1 = ["{\\fontfamily{phv}\\selectfont"]
+var helvet2 = ["}"]
 var outputArray4 = [
     "$$}",
     "\\end{preview}",
@@ -150,7 +149,11 @@ var outputArray4 = [
 ];
 
 var topDiv = document.createElement("div");
-document.body.appendChild(topDiv)
+var matrix = document.getElementById("matrix")
+matrix.appendChild(topDiv)
+
+var fontBox = document.getElementById("fontBox")
+var capsBox = document.getElementById("capsBox")
 
 function clearFunc() {
     mainArray.length = 0;
@@ -160,7 +163,7 @@ function clearFunc() {
     topDiv.style.display = "none";
     var newTop = document.createElement("div");
     topDiv = newTop
-    document.body.appendChild(topDiv);
+    matrix.appendChild(topDiv);
     activList(0, mainArray, topDiv, 0)
 };
 
@@ -183,7 +186,7 @@ function parse(listid, output){
                     if (x[0]){
                         // console.log("in")
                         output.push("\\begin{matrix}")
-                        if (1 == 0){
+                        if (capsBox.value == "all"){
                             output.push("\\textsc{" + x[0] + "} &")
                         }
                         else {
@@ -199,7 +202,7 @@ function parse(listid, output){
                 }
                 if (typeof x[1] == 'string'){
                     output.push("\\begin{matrix}");
-                    if (1 == 0){
+                    if (capsBox.value == "all"){
                         output.push("\\textsc{" + x[0] + "} & \\phantom{.} \\textsc{" + x[1] + "}\\\\")
                     }
                     else {
@@ -217,7 +220,7 @@ function parse(listid, output){
                 var x = listid[index];
                 if (typeof x == 'string'){continue}
                 if (typeof x[1] == 'object'){
-                    if (1 == 0){
+                    if (capsBox.value == "all"){
                         output.push("\\textsc{" + x[0] + "} &")
                     }
                     else {
@@ -228,7 +231,7 @@ function parse(listid, output){
                     parse(x[1], newlist)
                 }
                 if (typeof x[1] == 'string'){
-                    if (1 == 0){
+                    if (capsBox.value == "all"){
                         output.push("\\textsc{" + x[0] + "} & \\phantom{.} \\textsc{" + x[1] + "}\\\\")
                     }
                     else {
@@ -268,6 +271,7 @@ function finalConcat(...args){
         final = args[arr].concat(final)
     }
     finalString = final.join(" ")
+    // console.log(finalString)
     finalString = encodeURIComponent(finalString)
     url = "https://latexonline.cc/compile?text=" + finalString + "&command=xelatex"
     // console.log(url)
@@ -275,6 +279,13 @@ function finalConcat(...args){
 }
 
 function exportFunc(lst) {
+    // console.log(capsBox.value)
+    if (fontBox.value == "Times"){
+        var typeface = ["\\usepackage{mathptmx}"]
+    }
+    else {
+        var typeface = ["\\usepackage{tgadventor}"]
+    }
     indentArray.sort();
     indentArray.reverse();
     var width = 12 + (indentArray[0] * 3);
@@ -396,7 +407,7 @@ function exportFunc(lst) {
                         var part = string.slice(ind, gfStart);
                         parts.push(part);
                         if (thisGF == "gf"){
-                            if (1 == 1){
+                            if (capsBox.value == "Grammatical functions"){
                                 parts.push("$\\widehat{\\textsc{" +
                                 thisGF + "}}$")
                             }
@@ -408,7 +419,7 @@ function exportFunc(lst) {
                         else if ((thisGF.slice(0, 3) == "obl" ||
                         thisGF.slice(0, 3) == "obj" ||
                         thisGF.slice(0, 3) == "adj") && thisGF.length > 3){
-                            if (1 == 1){
+                            if (capsBox.value == "Grammatical functions"){
                                 parts.push("\\textsc{");
                                 parts.push(thisGF.slice(0, 3));
                                 parts.push("\\textsubscript{");
@@ -422,7 +433,7 @@ function exportFunc(lst) {
                             }
                         }
                         else {
-                            if (1 == 1){
+                            if (capsBox.value == "Grammatical functions"){
                                 parts.push("\\textsc{" + thisGF + "}")
                             }
                             else {parts.push(string.slice(gfStart, (gfEnd + 1)))}
@@ -464,14 +475,30 @@ function exportFunc(lst) {
     fixer(contentList, fixedList)
     // console.log(fixedList)
     // sanityCheck(fixedList)
-    finalConcat(outputArray1,
-        outputArray2,
-        paperwidth, 
-        outputArray3,
-        fixedList,
-        outputArray4 
-        )
-    
+    if (fontBox.value == "Times"){
+        finalConcat(outputArray1,
+            typeface,
+            outputArray2,
+            paperwidth, 
+            outputArray3,
+            fixedList,
+            outputArray4 
+            )
+    }
+    else {
+        // console.log("helvet")
+        finalConcat(outputArray1,
+            typeface,
+            outputArray2,
+            paperwidth, 
+            outputArray3,
+            helvet1,
+            fixedList,
+            helvet2,
+            outputArray4 
+            )
+    }
+        
 };
 
 function sanityCheck(lst){
