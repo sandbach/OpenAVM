@@ -259,6 +259,8 @@ function parse(listid, output){
 
 };
 
+var url
+
 function finalConcat(...args){
     args.reverse()
     var final = []
@@ -267,7 +269,9 @@ function finalConcat(...args){
     }
     finalString = final.join(" ")
     finalString = encodeURIComponent(finalString)
-    window.open("https://latexonline.cc/compile?text=" + finalString + "&command=xelatex")
+    url = "https://latexonline.cc/compile?text=" + finalString + "&command=xelatex"
+    // console.log(url)
+    window.open(url)
 }
 
 function exportFunc(lst) {
@@ -511,8 +515,6 @@ function curlyList(name, thisArray, thisDiv, indent) {
         var embedArray = [""];
         thisArray[innerArray[0]] = embedArray;
         var embedDiv = document.createElement("div");
-        // addButton.style.display = "none"
-        // cellAdd.removeChild(addButton);
         cellAdd.appendChild(embedDiv);
         activList(0, embedArray, embedDiv, indent)
         var newRow = document.createElement("tr");
@@ -545,6 +547,7 @@ function curlyList(name, thisArray, thisDiv, indent) {
         var result = 0;
         function runThrough(lst) {
             for (x in lst){
+                // if (lst[x] == "square"){result += 1}
                 if (typeof lst[x] == "string"){
                     result += 1
                 }
@@ -555,21 +558,41 @@ function curlyList(name, thisArray, thisDiv, indent) {
         }
         result += 2    
         runThrough(thisArray);
-        var squareLeft = document.createElement("img");
-        squareLeft.setAttribute('src', 'Curly_bracket_left.png')
-        // var squareLeft = document.createElement("embed");
-        // squareLeft.setAttribute('src', 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Curly_bracket_left.svg')
-        squareLeft.setAttribute('height', ((result /2) * 32))
-        squareLeft.setAttribute('width', 12)
-        thisDiv.children[0].rowSpan = (result + 25);
-        thisDiv.children[0].appendChild(squareLeft)
+        var width = 9
+        var scalar = result - 2
+        var size = 8*(scalar-1)
+
+        var curlyLeft = document.createElement('canvas')
+        curlyLeft.setAttribute('width', 2*width)
+        curlyLeft.setAttribute('height', (4*width + 2*size))
+        var ctx = curlyLeft.getContext("2d");
+        ctx.lineWidth = 3
+        ctx.beginPath();
+        ctx.arc(2*width,width,width,1.5*Math.PI,1*Math.PI, true);
+        ctx.lineTo(width,(width + size));
+        ctx.arc(0, (width + size), width, 0*Math.PI, 0.5*Math.PI, false);
+        ctx.arc(0, (3*width + size), width, 1.5*Math.PI, 0*Math.PI, false)
+        ctx.lineTo(width, (3 * width + 2 * size))
+        ctx.arc(2*width, (3 * width + 2 * size), width, 1*Math.PI, 0.5*Math.PI, true)
+        ctx.stroke()
+        thisDiv.children[0].rowSpan = (result * 3);
+        thisDiv.children[0].appendChild(curlyLeft)
         
-        var squareRight = document.createElement("img");
-        squareRight.setAttribute('src', 'Curly_bracket_right.png');
-        squareRight.setAttribute('height', ((result /2) * 32))
-        squareRight.setAttribute('width', 12)
+        var curlyRight = document.createElement('canvas')
+        curlyRight.setAttribute('width', 2*width)
+        curlyRight.setAttribute('height', (4*width + 2*size))
+        var ctx = curlyRight.getContext("2d")
+        ctx.lineWidth = 3
+        ctx.beginPath();
+        ctx.arc(0 ,width,width,0.5*Math.PI,0*Math.PI, false);
+        ctx.lineTo(width,(width + size));
+        ctx.arc(2*width, (width + size), width, 1*Math.PI, 0.5*Math.PI, true);
+        ctx.arc(2*width, (3*width + size), width, 1.5*Math.PI, 1*Math.PI, true)
+        ctx.lineTo(width, (3 * width + 2 * size))
+        ctx.arc(0, (3 * width + 2 * size), width, 0*Math.PI, 0.5*Math.PI, false)
+        ctx.stroke()
         thisDiv.children[2].rowSpan = (result + 25);
-        thisDiv.children[2].appendChild(squareRight)
+        thisDiv.children[2].appendChild(curlyRight)
         
     }
     relocate()
@@ -709,17 +732,36 @@ function activList(name, thisArray, thisDiv, indent) {
             }
         }    
         runThrough(thisArray);
-        var squareLeft = document.createElement("img");
-        squareLeft.setAttribute('src', 'Left_square_bracket.png')
-        squareLeft.setAttribute('height', ((result /2) * 32))
-        squareLeft.setAttribute('width', 12)
+
+        var width = 10
+        var scalar = result - 1
+        var size = 20*scalar
+
+        var squareLeft = document.createElement('canvas')
+        squareLeft.setAttribute('width', width)
+        squareLeft.setAttribute('height', size)
+        var ctx = squareLeft.getContext("2d")
+        ctx.lineWidth = 7
+        ctx.beginPath()
+        ctx.moveTo(width, 0)
+        ctx.lineTo(0,0)
+        ctx.lineTo(0, size)
+        ctx.lineTo(width, size)
+        ctx.stroke()
         thisDiv.children[0].rowSpan = (result + 25);
         thisDiv.children[0].appendChild(squareLeft)
         
-        var squareRight = document.createElement("img");
-        squareRight.setAttribute('src', 'Right_square_bracket.png');
-        squareRight.setAttribute('height', ((result /2) * 32))
-        squareRight.setAttribute('width', 12)
+        var squareRight = document.createElement('canvas')
+        squareRight.setAttribute('width', width)
+        squareRight.setAttribute('height', size)
+        var ctx = squareRight.getContext("2d")
+        ctx.lineWidth = 7
+        ctx.beginPath()
+        ctx.moveTo(0,0)
+        ctx.lineTo(width, 0)
+        ctx.lineTo(width, size)
+        ctx.lineTo(0, size)
+        ctx.stroke()
         thisDiv.children[5].rowSpan = (result + 25);
         thisDiv.children[5].appendChild(squareRight)
         
