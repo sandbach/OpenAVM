@@ -12,6 +12,6 @@ Below is an example LFG f-structure generated with OpenAVM.
 * The app automatically converts greater-than and less-than signs '< >' to true angle brackets '⟨ ⟩'.
 * By default, the app automatically sets LFG terms such as PRED and SUBJ in small caps. You can type them in lowercase.
 * Since OpenAVM uses [LaTeX](https://www.overleaf.com/latex/templates/a-quick-guide-to-latex/fghqpfgnxggz), you can use standard LaTeX expressions in the app, e.g.:
-  * `\textit{i}` &rarr '_i_'
-  * `$\alpha$` &rarr '_α_'
-  * `$\uparrow$` &rarr '&uarr;'
+  * `\textit{i}` &rarr; '_i_'
+  * `$\alpha$` &rarr; '_α_'
+  * `$\uparrow$` &rarr; '&uarr;'
