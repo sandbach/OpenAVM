@@ -14,4 +14,4 @@ Below is an example LFG f-structure generated with OpenAVM.
 * Since OpenAVM uses [LaTeX](https://www.overleaf.com/latex/templates/a-quick-guide-to-latex/fghqpfgnxggz), you can use standard LaTeX expressions in the app, e.g.:
   * `\textit{i}` → _i_
   * `$\alpha$` → _α_
-  * `$\uparrow$ → ↑
+  * `$\uparrow$` → &uarr;
