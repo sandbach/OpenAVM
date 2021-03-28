@@ -13,3 +13,5 @@ Below is an example LFG f-structure generated with OpenAVM.
 * By default, the app automatically sets LFG terms such as PRED and SUBJ in small caps. You can type them in lowercase.
 * Since OpenAVM uses [LaTeX](https://www.overleaf.com/latex/templates/a-quick-guide-to-latex/fghqpfgnxggz), you can use standard LaTeX expressions in the app, e.g.:
   * `\textit{i}` → _i_
+  * `$\alpha$` → _α_
+  * `$\uparrow$ → ↑
