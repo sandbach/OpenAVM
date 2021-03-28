@@ -6,6 +6,7 @@ The app allows users to create a structure of embedded square and curly brackets
 Below is an example LFG f-structure generated with OpenAVM.
 
 <p align="center">'Gramps planted a turnip'</p>
+
 ![compile](https://user-images.githubusercontent.com/80465432/112725923-995b1a80-8f12-11eb-9550-a2dfcc591d2f.png)
 
 ## Tips
