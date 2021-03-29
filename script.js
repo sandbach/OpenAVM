@@ -8,7 +8,11 @@ var specialArray = [
     "adjtheme",
     "objtheme",
     "objsource",
-    "oblben"
+    "oblben",
+    "oblof",
+    "objtheta",
+    "adjtheta",
+    "obltheta"
 ];
 var scArray = [
     'abl',
@@ -38,6 +42,7 @@ var scArray = [
     'f',
     'fem',
     'fin',
+    'foc',
     'focus',
     'form',
     'fut',
@@ -71,6 +76,7 @@ var scArray = [
     'nonfut',
     'nonpast',
     'nonpl',
+    'nounclass',
     'num',
     'obj',
     'obl',
@@ -107,6 +113,7 @@ var scArray = [
     'subj',
     'sbjv',
     'tense',
+    'top',
     'topic',
     'type',
     'voice',
@@ -147,6 +154,9 @@ var outputArray4 = [
     "\\end{preview}",
     "\\end{document}"
 ];
+var content = [];
+var contentList = [];
+var fixedList = [];
 
 var topDiv = document.createElement("div");
 var matrix = document.getElementById("matrix")
@@ -160,6 +170,9 @@ function clearFunc() {
     mainArray.push([""]);
     indentArray.length = 0;
     funcArray.length = 0;
+    content.length = 0;
+    contentList.length = 0;
+    fixedList.length = 0;
     topDiv.style.display = "none";
     var newTop = document.createElement("div");
     topDiv = newTop
@@ -243,7 +256,12 @@ function parse(listid, output){
                 }
             }
         }
-        output.push("\\end{bmatrix*}\\\\")
+        if (listid == mainArray){
+            output.push("\\end{bmatrix*}")
+        }
+        else{
+            output.push("\\end{bmatrix*}\\\\")
+        }
     }
     if (listid[0] == "curly"){
         output.push("\\begin{Bmatrix*}[l]");
@@ -270,12 +288,26 @@ function finalConcat(...args){
     for (arr in args){
         final = args[arr].concat(final)
     }
-    finalString = final.join(" ")
+    var finalString = final.join("\n")
     // console.log(finalString)
     finalString = encodeURIComponent(finalString)
     url = "https://latexonline.cc/compile?text=" + finalString + "&command=xelatex"
     // console.log(url)
     window.open(url)
+
+    var texSnippet = fixedList
+    texSnippet.unshift("{$$")
+    texSnippet.push("$$}")
+    texSnippet = texSnippet.join("\n")
+    var texOutput = document.createElement('textarea')
+    texOutput.value = texSnippet
+    if (1 == 0){
+        document.body.appendChild(texOutput) 
+        texOutput.select();
+        texOutput.setSelectionRange(0, 99999);
+        document.execCommand("copy")
+        texOutput.style.display = "none"
+    }
 }
 
 function exportFunc(lst) {
@@ -290,10 +322,6 @@ function exportFunc(lst) {
     indentArray.reverse();
     var width = 12 + (indentArray[0] * 3);
     var paperwidth = ["\\usepackage[paperwidth=" + String(width) + "cm]{geometry}"];
-    
-    var content = [];
-    var contentList = [];
-    var fixedList = [];
 
     function printList(lst){
         for (x in lst){
@@ -318,7 +346,7 @@ function exportFunc(lst) {
                     else if (lst[string][x - 1] == "{"){output_ += "`"}
                     else {output_ += lst[string][x]}
                 }
-                else if (lst[string][x] == "%"){output_ += ""}
+                else if (lst[string][x] == "%"){output_ += "\\%"}
                 else if (lst[string][x] == "<"){output_ += "$\\langle$"}
                 else if (lst[string][x] == ">"){output_ += "$\\rangle$"}
                 else if (lst[string][x] == "-"){
@@ -372,6 +400,9 @@ function exportFunc(lst) {
 
                             if (gfEnd == (string.length - 1)){}
                             else if (isLetter(string[gfEnd + 1])){right = false}
+                            else if (string.toLowerCase().slice((gfEnd + 1), (gfEnd + 6)) == ".ptcp"){
+                                right = false
+                            }
 
                             if (left == false || right == false){
                                 if (ind < string.length){find(ind + 1)}
@@ -421,9 +452,14 @@ function exportFunc(lst) {
                         thisGF.slice(0, 3) == "adj") && thisGF.length > 3){
                             if (capsBox.value == "Grammatical functions"){
                                 parts.push("\\textsc{");
-                                parts.push(thisGF.slice(0, 3));
+                                parts.push(thisGF.slice(0, 3));                                
                                 parts.push("\\textsubscript{");
-                                parts.push(thisGF.slice(3) + "}}");
+                                if (thisGF.slice(3) == "theta"){
+                                    parts.push("$\\theta$}}")
+                                }
+                                else{
+                                    parts.push(thisGF.slice(3) + "}}");
+                                }
 
                             }
                             else {
@@ -473,8 +509,7 @@ function exportFunc(lst) {
     parse(mainArray, content)
     printList(content)
     fixer(contentList, fixedList)
-    // console.log(fixedList)
-    // sanityCheck(fixedList)
+    
     if (fontBox.value == "Times"){
         finalConcat(outputArray1,
             typeface,
