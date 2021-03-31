@@ -240,6 +240,9 @@ function parse(listid, output){
                 var x = listid[index];
                 if (typeof x == 'string'){continue}
                 if (typeof x[1] == 'object'){
+                    if (x !== listid[1]){
+                        output.push("\\vspace{1.5mm}")
+                    }
                     if (capsBox.value == "all"){
                         output.push("\\textsc{" + x[0] + "} &")
                     }
@@ -257,7 +260,8 @@ function parse(listid, output){
                     else {
                         output.push("\\text{" + x[0] + "} & \\phantom{.} \\text{" + x[1] + "}\\\\")
                     }
-                    if (x !== listid[listid.length - 1]){
+                    if (x !== listid[listid.length - 1] &&
+                        x !== listid[listid.length - 2]){
                         output.push("\\vspace{1.5mm}")
                     }
                 }
