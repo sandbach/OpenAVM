@@ -12,14 +12,18 @@ var specialArray = [
     "oblof",
     "objtheta",
     "adjtheta",
-    "obltheta"
+    "obltheta",
+    "oblag",
+    "oblgo"
 ];
 var scArray = [
+    'a',
     'abl',
     'abs',
     'acc',
     'active',
     'adj',
+    'anim',
     'antip',
     'aspect',
     'av',
@@ -55,6 +59,7 @@ var scArray = [
     'index',
     'inf',
     'ins',
+    'instr',
     'interr',
     'inv',
     'ipfv',
@@ -78,6 +83,7 @@ var scArray = [
     'nonpl',
     'nounclass',
     'num',
+    'o',
     'obj',
     'obl',
     'ov',
@@ -108,6 +114,7 @@ var scArray = [
     'recp',
     'refl',
     'rel',
+    's',
     'spec',
     'sg',
     'subj',
@@ -308,6 +315,9 @@ function finalConcat(...args){
         document.execCommand("copy")
         texOutput.style.display = "none"
     }
+    content.length = 0;
+    contentList.length = 0;
+    fixedList.length = 0;
 }
 
 function exportFunc(lst) {
