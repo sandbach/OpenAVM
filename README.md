@@ -20,6 +20,6 @@ Below is an example LFG f-structure generated with OpenAVM.
   * `$\uparrow$` &rarr; '&uarr;'
 
 ## Contact
-If you have any questions or feedback, please get in touch.
+If you have any questions or feedback, please get in touch:
 
 asher.sandbach@some.ox.ac.uk
