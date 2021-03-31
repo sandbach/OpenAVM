@@ -18,3 +18,8 @@ Below is an example LFG f-structure generated with OpenAVM.
   * `\textit{i}` &rarr; '_i_'
   * `$\alpha$` &rarr; '_α_'
   * `$\uparrow$` &rarr; '&uarr;'
+
+## Contact
+If you have any questions or feedback, please get in touch.
+
+asher.sandbach@some.ox.ac.uk
