@@ -5,9 +5,9 @@ The app allows users to create a structure of embedded square and curly brackets
 
 Below is an example LFG f-structure generated with OpenAVM.
 
-<p align="center">'Gramps planted a turnip.'</p>
+<p align="center">'David fell from the chair.'</p>
 
-![compile](https://user-images.githubusercontent.com/80465432/112725923-995b1a80-8f12-11eb-9550-a2dfcc591d2f.png)
+![compile (1)](https://user-images.githubusercontent.com/80465432/113199606-3a253f00-925f-11eb-9947-56ca2812f724.png)
 
 ## Tips
 * The app automatically converts greater-than and less-than signs '< >' to true angle brackets '⟨ ⟩'.
