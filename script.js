@@ -14,7 +14,8 @@ var specialArray = [
     "adjtheta",
     "obltheta",
     "oblag",
-    "oblgo"
+    "oblgo",
+    "oblagent",
 ];
 var scArray = [
     'a',
@@ -89,6 +90,7 @@ var scArray = [
     'ov',
     'pass',
     'past',
+    'pastpart',
     'paucal',
     'perf',
     'pers',
@@ -101,6 +103,7 @@ var scArray = [
     'pred',
     'predlink',
     'pres',
+    'prespart',
     'prf',
     'prog',
     'pron',
@@ -138,18 +141,10 @@ var outputArray1 = [
 var outputArray2 = [
     "\\usepackage{amsmath}",
     "\\usepackage{mathtools}",
-    "\\usepackage{setspace}"
 ]
 var outputArray3 = [
     "\\usepackage[active, tightpage]{preview}",
     "\\setlength\\PreviewBorder{2pt}",
-    "\\usepackage{tabstackengine}",
-    "\\stackMath",
-    "\\setstackgap{L}{24pt}",
-    "\\setstacktabbedgap{4pt}",
-    "\\def\\lrgap{\\kern6pt}",
-    "\\def\\xbracketVectorstack#1{\\left[\\lrgap\\Vectorstack{#1}\\lrgap\\right]}",
-    "\\def\\xbracketMatrixstack#1{\\left[\\lrgap\\tabbedCenterstack{#1}\\lrgap\\right]}",
     "\\begin{document}",
     "\\begin{preview}",
     "{$$"
@@ -171,6 +166,7 @@ matrix.appendChild(topDiv)
 
 var fontBox = document.getElementById("fontBox")
 var capsBox = document.getElementById("capsBox")
+var snippet = document.getElementById("snippet")
 
 function clearFunc() {
     mainArray.length = 0;
@@ -304,7 +300,7 @@ function finalConcat(...args){
     finalString = encodeURIComponent(finalString)
     url = "https://latexonline.cc/compile?text=" + finalString + "&command=xelatex"
     // console.log(url)
-    window.open(url)
+    // window.open(url)
 
     var texSnippet = fixedList
     texSnippet.unshift("{$$")
@@ -312,20 +308,22 @@ function finalConcat(...args){
     texSnippet = texSnippet.join("\n")
     var texOutput = document.createElement('textarea')
     texOutput.value = texSnippet
-    if (1 == 0){
+    if (snippet.checked){
+        // console.log(snippet.value)
         document.body.appendChild(texOutput) 
         texOutput.select();
         texOutput.setSelectionRange(0, 99999);
         document.execCommand("copy")
         texOutput.style.display = "none"
     }
+    window.open(url)
     content.length = 0;
     contentList.length = 0;
     fixedList.length = 0;
 }
 
 function exportFunc(lst) {
-    // console.log(capsBox.value)
+    // console.log(snippet.checked)
     if (fontBox.value == "Times"){
         var typeface = ["\\usepackage{mathptmx}"]
     }
