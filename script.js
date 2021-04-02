@@ -1,6 +1,7 @@
 var mainArray = [[""]];
 var indentArray = [];
 var funcArray = [];
+// a list of terms with subscript thematic roles
 var specialArray = [
     "oblloc",
     "oblon",
@@ -17,6 +18,7 @@ var specialArray = [
     "oblgo",
     "oblagent",
 ];
+// a list of terms that should be in small caps
 var scArray = [
     'a',
     'abl',
@@ -27,12 +29,14 @@ var scArray = [
     'anim',
     'antip',
     'aspect',
+    'attr',
     'av',
     'bv',
     'case',
     'comp',
     'compform',
     'concord',
+    'conj',
     'dat',
     'decl',
     'def',
@@ -92,6 +96,7 @@ var scArray = [
     'past',
     'pastpart',
     'paucal',
+    'pcase',
     'perf',
     'pers',
     'pform',
@@ -126,6 +131,7 @@ var scArray = [
     'top',
     'topic',
     'type',
+    'value',
     'voice',
     'vtype',
     'wh',
@@ -133,6 +139,7 @@ var scArray = [
     'xcomp'
 ];
 var allTerms = specialArray.concat(scArray)
+// the LaTeX preamble
 var outputArray1 = [
     "\\documentclass[12pt]{article}",
     "\\usepackage[T1]{fontenc}",
@@ -183,6 +190,7 @@ function clearFunc() {
     activList(0, mainArray, topDiv, 0)
 };
 
+// the parser converts the main nested array into LaTeX
 function parse(listid, output){
 
     if (listid[0] == "square"){
@@ -193,14 +201,11 @@ function parse(listid, output){
             if (listid[x][0] == ""){isEmpty = true}
         }
         if (isEmpty){
-            // console.log("empty")
             for (index in listid){
                 var x = listid[index];
                 if (typeof x == 'string'){continue}
                 if (typeof x[1] == 'object'){
-                    // console.log(x[0])
                     if (x[0]){
-                        // console.log("in")
                         output.push("\\begin{matrix}")
                         if (capsBox.value == "all"){
                             output.push("\\textsc{" + x[0] + "} &")
@@ -289,6 +294,9 @@ function parse(listid, output){
 
 var url
 
+// finalConcat joins the preamble and the fixed list together into a
+// single long string with line breaks, then encodes it and sends it
+// to latexonline
 function finalConcat(...args){
     args.reverse()
     var final = []
@@ -309,7 +317,6 @@ function finalConcat(...args){
     var texOutput = document.createElement('textarea')
     texOutput.value = texSnippet
     if (snippet.checked){
-        // console.log(snippet.value)
         document.body.appendChild(texOutput) 
         texOutput.select();
         texOutput.setSelectionRange(0, 99999);
@@ -322,6 +329,8 @@ function finalConcat(...args){
     fixedList.length = 0;
 }
 
+// exportFunc adds bits to the preamble and calls various other
+// functions
 function exportFunc(lst) {
     // console.log(snippet.checked)
     if (fontBox.value == "Times"){
@@ -346,6 +355,11 @@ function exportFunc(lst) {
         }
     };
 
+    // fixer does quite a lot: it swaps out individual characters
+    // to fix quotation marks etc., works out subscripting for
+    // thematic roles, and puts relevant terms in small caps if
+    // requested, checking that they do not form parts of other
+    // words eg. SUBJugate
     function fixer(lst, out){
         for (string in lst){
             if (lst[string] == ""){break} 
@@ -385,22 +399,17 @@ function exportFunc(lst) {
 
                 for (gf in allTerms){
                     var thisGF = allTerms[gf];
-                    // console.log(thisGF)
                     var contains = false;
                     if (string.toLowerCase().indexOf(thisGF) !== -1){
                         // console.log(specialArray[gf])
                         contains = true
                     }
                     if (contains){
-                        // console.log(thisGF)
                         function find(ind){
                             var gfStart = string.toLowerCase().indexOf(thisGF, ind);
                             var gfEnd = gfStart + thisGF.length - 1;
-                            // console.log(thisGF, gfStart, gfEnd);
                             var left = true;
                             var right = true;
-
-                            // console.log(thisGF, string[gfStart - 1], string[gfEnd + 1])
 
                             if (gfStart == 0){}
                             else {
@@ -424,7 +433,6 @@ function exportFunc(lst) {
                                 var inner = [gfStart, gfEnd];
                                 indList.push(thisGF);
                                 indList.push(inner);
-                                // console.log(thisGF, inner)
                                 detected.push(indList)
                             }
                             
@@ -436,13 +444,9 @@ function exportFunc(lst) {
                 var parts = []
 
                 if (detected.length > 0){
-                    // if (detected.length == 0){continue}
-                    // console.log("something")
                     detected.sort(function(a, b){return a[1][0] - b[1][0]})
-                    // console.log(detected[1][0])
 
                     function divide(ind, gfunc){
-                        // console.log(gfunc, detected.length - 1)
                         var thisGF = detected[gfunc][0];
                         var gfStart = detected[gfunc][1][0];
                         var gfEnd = detected[gfunc][1][1];
@@ -492,8 +496,6 @@ function exportFunc(lst) {
                             parts.push(part)
                         }
                         else{
-                            // console.log("here")
-                            // console.log(gfunc)
                             divide((gfEnd + 1), (gfunc + 1))
                         }
                         
@@ -503,12 +505,9 @@ function exportFunc(lst) {
 
                     var newstring = "";
                     for (part in parts){
-                        // console.log(parts[part])
                         newstring += parts[part]
                     }
                     output[0] = newstring
-                    // console.log(output[0])
-                    // console.log(string)
                 }
                 else {output[0] = string}
 
@@ -533,7 +532,6 @@ function exportFunc(lst) {
             )
     }
     else {
-        // console.log("helvet")
         finalConcat(outputArray1,
             typeface,
             outputArray2,
@@ -548,22 +546,16 @@ function exportFunc(lst) {
         
 };
 
-function sanityCheck(lst){
-    
-    for (x in lst){
-        if (typeof lst[x] == "string"){
-            console.log(lst[x]);
-        };
-        if (typeof lst[x] == "object"){
-            sanityCheck(lst[x]);
-        };
-    };
-}
-
 function isLetter(char){
     return char.toLowerCase() != char.toUpperCase()
 }
 
+// GUI stuff
+
+// curlyList is called when the user presses the { } button. The
+// structure of curly bracket matrices differs from that of square
+// brackets in that curly brackets represent a set, and can therefore
+// contain any number of vertically stacked sets of square brackets.
 function curlyList(name, thisArray, thisDiv, indent) {
     indentArray.push(indent)
     thisArray[0] = "curly";
@@ -672,6 +664,9 @@ function curlyList(name, thisArray, thisDiv, indent) {
     relocate()
 }
 
+// squareList is called to begin with, and when the user presses the
+// [ ] button. Both types of bracket are built visually with HTML
+// canvas element.
 function activList(name, thisArray, thisDiv, indent) {
     indentArray.push(indent);
     thisArray[0] = "square";
