@@ -17,6 +17,7 @@ var specialArray = [
     "oblag",
     "oblgo",
     "oblagent",
+    "oblexp"
 ];
 // a list of terms that should be in small caps
 var scArray = [
@@ -36,6 +37,7 @@ var scArray = [
     'comp',
     'compform',
     'concord',
+    'cond',
     'conj',
     'dat',
     'decl',
@@ -43,6 +45,7 @@ var scArray = [
     'deixis',
     'dir',
     'dis',
+    'distant',
     'dist',
     'du',
     'dual',
@@ -65,6 +68,7 @@ var scArray = [
     'inf',
     'ins',
     'instr',
+    'inst',
     'interr',
     'inv',
     'ipfv',
