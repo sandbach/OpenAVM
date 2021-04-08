@@ -27,6 +27,7 @@ var scArray = [
     'acc',
     'active',
     'adj',
+    'adjunct',
     'anim',
     'antip',
     'aspect',
