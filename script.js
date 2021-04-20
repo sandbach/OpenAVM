@@ -343,6 +343,9 @@ function finalConcat(...args){
 }
 
 function imageExport(){
+    var loadBar = document.getElementById("loading")
+    loadBar.setAttribute("src", "https://quicklatex.com/images/progressbar.gif")
+    loadBar.style.display = "block"
     // document.getElementById("expImg").setAttribute("src", "https://quicklatex.com/images/progressbar.gif")
     var formula = fixedList.join("\n")
     var preamble = outputArray2.concat(typeface)
@@ -359,6 +362,7 @@ function imageExport(){
       }).done(function(data) {
         var imgurl = data.data.imgurl[0]
         // document.getElementById("expImg").setAttribute("src", imgurl)
+        document.getElementById("loading").style.display = "none"
         window.open(imgurl)
       });
 }
