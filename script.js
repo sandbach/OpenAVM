@@ -1,6 +1,7 @@
 var mainArray = [[""]];
 var indentArray = [];
 var funcArray = [];
+var typeface
 // a list of terms with subscript thematic roles
 var specialArray = [
     "oblloc",
@@ -26,6 +27,7 @@ var scArray = [
     'abs',
     'acc',
     'active',
+    'ade',
     'adj',
     'adjunct',
     'anim',
@@ -179,6 +181,7 @@ matrix.appendChild(topDiv)
 var fontBox = document.getElementById("fontBox")
 var capsBox = document.getElementById("capsBox")
 var snippet = document.getElementById("snippet")
+var fileBox = document.getElementById("fileBox")
 
 function clearFunc() {
     mainArray.length = 0;
@@ -213,10 +216,10 @@ function parse(listid, output){
                     if (x[0]){
                         output.push("\\begin{matrix}")
                         if (capsBox.value == "all"){
-                            output.push("\\textsc{" + x[0] + "} &")
+                            output.push("\\textsc{" + x[0] + "}&")
                         }
                         else {
-                            output.push("\\text{" + x[0] + "} &")
+                            output.push("\\text{" + x[0] + "}&")
                         }
                     }
                     var newlist = []
@@ -229,10 +232,10 @@ function parse(listid, output){
                 if (typeof x[1] == 'string'){
                     output.push("\\begin{matrix}");
                     if (capsBox.value == "all"){
-                        output.push("\\textsc{" + x[0] + "} & \\phantom{.} \\textsc{" + x[1] + "}\\\\")
+                        output.push("\\textsc{" + x[0] + "}&\\phantom{.}\\textsc{" + x[1] + "}\\\\")
                     }
                     else {
-                        output.push("\\text{" + x[0] + "} & \\phantom{.} \\text{" + x[1] + "}\\\\")
+                        output.push("\\text{" + x[0] + "}&\\phantom{.}\\text{" + x[1] + "}\\\\")
                     }
                     output.push("\\end{matrix}\\\\")
                     if (x !== listid[listid.length - 1]){
@@ -250,10 +253,10 @@ function parse(listid, output){
                         output.push("\\vspace{1.5mm}")
                     }
                     if (capsBox.value == "all"){
-                        output.push("\\textsc{" + x[0] + "} &")
+                        output.push("\\textsc{" + x[0] + "}&")
                     }
                     else {
-                        output.push("\\text{" + x[0] + "} &")
+                        output.push("\\text{" + x[0] + "}&")
                     }
                     var newlist = [];
                     output.push(newlist);
@@ -261,10 +264,10 @@ function parse(listid, output){
                 }
                 if (typeof x[1] == 'string'){
                     if (capsBox.value == "all"){
-                        output.push("\\textsc{" + x[0] + "} & \\phantom{.} \\textsc{" + x[1] + "}\\\\")
+                        output.push("\\textsc{" + x[0] + "}&\\phantom{.}\\textsc{" + x[1] + "}\\\\")
                     }
                     else {
-                        output.push("\\text{" + x[0] + "} & \\phantom{.} \\text{" + x[1] + "}\\\\")
+                        output.push("\\text{" + x[0] + "}&\\phantom{.}\\text{" + x[1] + "}\\\\")
                     }
                     if (x !== listid[listid.length - 1] &&
                         x !== listid[listid.length - 2]){
@@ -328,10 +331,36 @@ function finalConcat(...args){
         document.execCommand("copy")
         texOutput.style.display = "none"
     }
-    window.open(url)
+    if (fileBox.value == "pdf"){
+        window.open(url)
+    }
+    if (fileBox.value == "Image"){
+        imageExport()
+    }
     content.length = 0;
     contentList.length = 0;
     fixedList.length = 0;
+}
+
+function imageExport(){
+    // document.getElementById("expImg").setAttribute("src", "https://quicklatex.com/images/progressbar.gif")
+    var formula = fixedList.join("\n")
+    var preamble = outputArray2.concat(typeface)
+    preamble = preamble.join("\n")
+    $.ajax({
+        url: "https://wrapapi.com/use/sandbach/quicklatex-api/submit/0.0.1",
+        method: "POST",
+        data: {
+          "rand": Math.random()*100,
+          "preamble": preamble,
+          "content": formula,
+          "wrapAPIKey": "rutHbse4TYMAPfIZWafwwWtyOjlCqh4e"
+        }
+      }).done(function(data) {
+        var imgurl = data.data.imgurl[0]
+        // document.getElementById("expImg").setAttribute("src", imgurl)
+        window.open(imgurl)
+      });
 }
 
 // exportFunc adds bits to the preamble and calls various other
@@ -339,10 +368,10 @@ function finalConcat(...args){
 function exportFunc(lst) {
     // console.log(snippet.checked)
     if (fontBox.value == "Times"){
-        var typeface = ["\\usepackage{mathptmx}"]
+        typeface = ["\\usepackage{mathptmx}"]
     }
     else {
-        var typeface = ["\\usepackage{tgadventor}"]
+        typeface = ["\\usepackage{tgadventor}"]
     }
     indentArray.sort();
     indentArray.reverse();
@@ -392,6 +421,7 @@ function exportFunc(lst) {
                     }
                     else {output_ += lst[string][x]}
                 }
+                else if (lst[string][x] == " "){output_ += "\\hspace{3pt}"}
                 else {output_ += lst[string][x]}
                 
             }
@@ -525,29 +555,21 @@ function exportFunc(lst) {
     parse(mainArray, content)
     printList(content)
     fixer(contentList, fixedList)
-    
-    if (fontBox.value == "Times"){
-        finalConcat(outputArray1,
-            typeface,
-            outputArray2,
-            paperwidth, 
-            outputArray3,
-            fixedList,
-            outputArray4 
-            )
+
+    if (fontBox.value != "Times"){
+        fixedList.unshift(helvet1[0])
+        fixedList.push(helvet2[0])
+        // console.log(fixedList)
     }
-    else {
-        finalConcat(outputArray1,
-            typeface,
-            outputArray2,
-            paperwidth, 
-            outputArray3,
-            helvet1,
-            fixedList,
-            helvet2,
-            outputArray4 
-            )
-    }
+
+    finalConcat(outputArray1,
+        typeface,
+        outputArray2,
+        paperwidth,
+        outputArray3,
+        fixedList,
+        outputArray4
+        )
         
 };
 
@@ -629,7 +651,7 @@ function curlyList(name, thisArray, thisDiv, indent) {
         }
         result += 2    
         runThrough(thisArray);
-        var width = 9
+        var width = 8
         var scalar = result - 2
         var size = 8*(scalar-1)
 
@@ -637,7 +659,7 @@ function curlyList(name, thisArray, thisDiv, indent) {
         curlyLeft.setAttribute('width', 2*width)
         curlyLeft.setAttribute('height', (4*width + 2*size))
         var ctx = curlyLeft.getContext("2d");
-        ctx.lineWidth = 3
+        ctx.lineWidth = 2
         ctx.beginPath();
         ctx.arc(2*width,width,width,1.5*Math.PI,1*Math.PI, true);
         ctx.lineTo(width,(width + size));
@@ -653,7 +675,7 @@ function curlyList(name, thisArray, thisDiv, indent) {
         curlyRight.setAttribute('width', 2*width)
         curlyRight.setAttribute('height', (4*width + 2*size))
         var ctx = curlyRight.getContext("2d")
-        ctx.lineWidth = 3
+        ctx.lineWidth = 2
         ctx.beginPath();
         ctx.arc(0 ,width,width,0.5*Math.PI,0*Math.PI, false);
         ctx.lineTo(width,(width + size));
@@ -807,7 +829,7 @@ function activList(name, thisArray, thisDiv, indent) {
         }    
         runThrough(thisArray);
 
-        var width = 10
+        var width = 8
         var scalar = result - 1
         var size = 20*scalar
 
@@ -815,7 +837,7 @@ function activList(name, thisArray, thisDiv, indent) {
         squareLeft.setAttribute('width', width)
         squareLeft.setAttribute('height', size)
         var ctx = squareLeft.getContext("2d")
-        ctx.lineWidth = 7
+        ctx.lineWidth = 4
         ctx.beginPath()
         ctx.moveTo(width, 0)
         ctx.lineTo(0,0)
@@ -829,7 +851,7 @@ function activList(name, thisArray, thisDiv, indent) {
         squareRight.setAttribute('width', width)
         squareRight.setAttribute('height', size)
         var ctx = squareRight.getContext("2d")
-        ctx.lineWidth = 7
+        ctx.lineWidth = 4
         ctx.beginPath()
         ctx.moveTo(0,0)
         ctx.lineTo(width, 0)
