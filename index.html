@@ -44,7 +44,11 @@
         label {
             font-size: 10pt;
         }
+        #expImg{
+            margin-top: 5px
+        }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -75,6 +79,14 @@
 </div>
 
 <div class="options">
+    <label for="fileBox">Export as:</label>
+    <select name="fileBox" id="fileBox">
+        <option value="pdf">PDF</option>
+        <option selected="png">Image</option>
+    </select>
+</div>
+
+<div class="options">
     <label for="snippet">Copy LaTeX snippet to clipboard</label>
     <input type="checkbox" id="snippet" name="snippet" value="Copy">
 </div>
@@ -98,6 +110,8 @@
 <div id="matrix"></div>
 
 <script src="script.js"></script>
+
+<img id="expImg">
 
 </td>
 
