@@ -290,7 +290,10 @@ function parse(listid, output){
             if (typeof x == 'string'){continue}
             if (typeof x == 'object'){
                 var newlist = [];
-                output.push("\\vspace{1.5mm}");
+                if (index < (listid.length - 1)){
+                    output.push("\\vspace{1.5mm}");
+                }
+                // output.push("\\vspace{1.5mm}");
                 output.push(newlist);
                 parse(x, newlist)
             }
@@ -401,6 +404,7 @@ function exportFunc(lst) {
     function fixer(lst, out){
         for (string in lst){
             if (lst[string] == ""){break} 
+            
             var output_ = ""
             for (let x = 0; x <= (lst[string].length -1); ++x){
                 
@@ -425,7 +429,8 @@ function exportFunc(lst) {
                     }
                     else {output_ += lst[string][x]}
                 }
-                else if (lst[string][x] == " "){output_ += "\\hspace{3pt}"}
+                // else if (lst[string][x] == " "){output_ += "\\hspace{3pt}"}
+                else if (lst[string][x] == " "){output_ += "~"}
                 else {output_ += lst[string][x]}
                 
             }
@@ -551,7 +556,9 @@ function exportFunc(lst) {
                 else {output[0] = string}
 
             }
+
             special(lst[string])
+            
             out.push(output[0])
         }
     }
@@ -559,6 +566,14 @@ function exportFunc(lst) {
     parse(mainArray, content)
     printList(content)
     fixer(contentList, fixedList)
+
+    for (item in fixedList){
+        
+        if (fixedList[item] == "\\vspace{1.5mm}" && fixedList[item - 1] == "\\vspace{1.5mm}"){
+            // console.log(fixedList[item])
+            fixedList.splice(item, 1)
+        }
+    }
 
     if (fontBox.value != "Times"){
         fixedList.unshift(helvet1[0])
@@ -696,7 +711,7 @@ function curlyList(name, thisArray, thisDiv, indent) {
 }
 
 // squareList is called to begin with, and when the user presses the
-// [ ] button. Both types of bracket are built visually with HTML
+// [ ] button. Both types of bracket are built visually with the HTML
 // canvas element.
 function activList(name, thisArray, thisDiv, indent) {
     indentArray.push(indent);
