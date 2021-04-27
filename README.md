@@ -8,7 +8,7 @@ Below is an example LFG f-structure generated with OpenAVM.
 
 <p align="center">'David gave the book to Mary yesterday.'</p>
 
-![ql_bbc3924d485de52180b377c72d09088a_l3](https://user-images.githubusercontent.com/80465432/116241905-af543900-a765-11eb-9254-d6b8ee2139cb.png)
+![david](https://user-images.githubusercontent.com/80465432/116242807-94ce8f80-a766-11eb-8091-2449f1987cfd.jpg)
 
 ## Tips
 * The app automatically converts greater-than and less-than signs '< >' to true angle brackets '⟨ ⟩'.
