@@ -322,8 +322,8 @@ function finalConcat(...args){
     // window.open(url)
 
     var texSnippet = fixedList
-    texSnippet.unshift("{$$")
-    texSnippet.push("$$}")
+    texSnippet.unshift("$")
+    texSnippet.push("$")
     texSnippet = texSnippet.join("\n")
     var texOutput = document.createElement('textarea')
     texOutput.value = texSnippet
