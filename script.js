@@ -94,6 +94,7 @@ var scArray = [
     'nonpast',
     'nonpl',
     'nounclass',
+    'nucl',
     'num',
     'o',
     'obj',
